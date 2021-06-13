@@ -1,0 +1,77 @@
+<html>
+<head>
+	<title>Decryptor</title>
+	<meta charset="UTF-8">
+	<script src="openpgp.min.js"></script>
+	<!--
+		Entschlüsselt eine rekursiv verschlüsselte PGP/GPG-Eingabe-Datei.
+		Jeder GPG-Block in der Datei wird solange entschlüsselt und an
+		der entsprechenden Stelle eingefügt, bis es keinen GPG-Block mehr
+		in der Datei gibt.
+	-->
+	<script>
+		function failureCallback(err) {
+			alert(err);
+		}
+
+		function recursiveDecrypt(input, privateKey, target, count = 0) {
+			var decrypted = '';
+			var idx = input.indexOf("-----BEGIN PGP MESSAGE-----");
+			var idxEnd = input.indexOf("-----END PGP MESSAGE-----\n", idx);
+			if (idx >= 0 && idxEnd > idx) {
+				if (idx > 0) {
+					target.value += input.substring(0, idx);
+				}
+				var encrypted = input.substring(idx, idxEnd + 26);
+				openpgp.readMessage({
+					armoredMessage: encrypted // parse armored message
+				}).then(function(message) {
+					return openpgp.decrypt({ message, decryptionKeys: privateKey });
+				}).then(function(result) {
+					input = result.data + input.substring(idxEnd + 26);
+					setTimeout(function() {
+						recursiveDecrypt(input, privateKey, target, count + 1);
+					}, 30);
+				}).catch(failureCallback);
+			} else {
+				target.value += input;
+				target.value += count + " Zeilen";
+			}
+		}
+
+		function decrypt() {
+			var encrypted = document.getElementById('encrypted').value;
+			var key = document.getElementById('key').value;
+			var passphrase = document.getElementById('passphrase').value;
+			openpgp.readKey({ armoredKey: key }).then(function(armoredKey) {
+				return openpgp.decryptKey({ privateKey: armoredKey, passphrase });
+			}).then(function(privateKey) {
+				var target = document.getElementById('decrypted');
+				target.value = '';
+				recursiveDecrypt(encrypted, privateKey, target);
+			}).catch(failureCallback);
+		}
+	</script>
+</head>
+<body>
+	<h2>Decryptor</h2>
+	<fieldset>
+		<legend>Encrypted data (ASCII)</legend>
+		<textarea id="encrypted" style="width: 100%" rows="10"></textarea>
+	</fieldset>
+	<fieldset>
+		<legend>Private Key (ASCII)</legend>
+		<textarea id="key" style="width: 100%" rows="10" ></textarea><br>
+		<label>Password: <input type="password" id="passphrase"></label>
+	</fieldset>
+	<button onclick="decrypt()">Decrypt!</button>
+	<fieldset>
+		<legend>Decrypted</legend>
+		<textarea id="decrypted" style="width: 100%" rows="10" readonly></textarea>
+	</fieldset>
+	<div>
+		Verwendet <a href="https://openpgpjs.org">OpenPGP.js</a> (LGPL 3.0)
+	</div>
+	
+</body>
+</html>

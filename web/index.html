@@ -1,0 +1,146 @@
+<html>
+	<head>
+		<title>COVID-19 Kontakterfassung | Universum e.V.</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Expires" content="0">
+		<style>
+			html, body {
+				box-sizing: border-box;
+				margin: 0;
+				padding: 0;
+				font-family: 'Arial', sans-serif;
+			}
+
+			#traceform {
+				border: 1px solid #aaaa00;
+				background-color: #fff3af;
+				padding: 0.5em;
+			}
+
+			#traceform label {
+				display: block;
+				margin-bottom: 0.5em;
+			}
+
+			#traceform input[type="text"] {
+				width: 20em;
+			}
+
+			#head, #page {
+				margin: 0.5em;
+			}
+
+			#success {
+				display: none;
+				margin: 1em;
+				padding: 0.5em;
+				border: 1px solid green;
+				background-color: #b7ff98;
+			}
+
+		</style>
+		<script>
+			const urlSearchParams = new URLSearchParams(window.location.search);
+			const params = Object.fromEntries(urlSearchParams.entries());
+			function init() {
+				if (params.success !== undefined) {
+					document.getElementById('success').style.display = 'block';
+					document.getElementById('token').value = params.success;
+				} else if (params.token) {
+					document.getElementById('token').value = params.token;
+				}
+				if (localStorage !== undefined) {
+					var storage = sessionStorage;
+					if (localStorage.getItem('save')) {
+						storage = localStorage;
+						document.getElementById('save').checked = true;
+					}
+
+					var elements = document.forms['traceform'].elements;
+					for (var i in elements) {
+						var e = elements[i];
+						if (e.name && e.name !== 'token' && e.name !== 'save') {
+							e.value = storage.getItem(e.name) || '';
+						}
+					}
+				}
+			}
+
+			function beforeSubmit() {
+				if (window.localStorage === undefined) {
+					return;
+				}
+				var storage;
+				if (document.getElementById('save').checked) {
+					console.log("local");
+					storage = window.localStorage;
+				} else {
+					console.log("session");
+					storage = window.sessionStorage;
+					window.localStorage.clear();
+				}
+				var elements = document.forms['traceform'].elements;
+				for (var i in elements) {
+					var e = elements[i];
+					if (e.name && e.name !== 'token') {
+						storage.setItem(e.name, e.value);
+					}
+				}
+			}
+		</script>
+	</head>
+	<body onload="init()">
+		<div id="head">
+			<img src="universum-ev.svg" style="width: 100%; max-width: 20em" alt="Universum e.V." title="Universum e.V.">
+			<h2>Kontaktdatenerfassung</h2>
+		</div>
+		<div id="success">
+			<p>Vielen Dank, Ihre Daten wurden erfolgreich
+			gespeichert. Sie können nun eine weitere teilnehmende
+			Person registrieren, oder <a href="javascript:window.close()">das Formular schließen</a>.</p>
+		</div>
+		<div id="page">
+			<p>Lieber Besucher,<br>
+			<br>
+			Wir freuen uns, Sie wieder in unserem Haus besuchen zu fürfen. Nach
+			§5 Abs. 1 Satz 9 <a href="https://www.niedersachsen.de/Coronavirus/vorschriften-der-landesregierung-185856.html" target="_blank">Nieders. Corona-VO</a> sind wir verpflichtet, die personenbezogenen Daten
+			unserer Besucher zum Zweck der Kontaktverfolgung durch das Gesundheitsamt
+			zu erheben und vier Wochen lang zu speichern.<br>
+			<br>
+			Ihre Daten werden verschlüsselt gesendet und gespeichert und können
+			ausschließlich durch die Geschäftsführung zum Zweck der Weitergabe
+			an das Gesundheitsamt entschlüsselt werden. Nach Ablauf der 4-Wochen-Frist
+			werden die Daten automatisch gelöscht.</br>
+			<br>
+			Sie können über dieses Formular auch mehrere Besucherdaten erfassen
+			und eingeben. Wenn Sie den Haken 'Meine Daten im Browser speichern'
+			aktivieren, werden Ihre unverschlüsselten Daten lokal in Ihrem Browser
+			gespeichert und ausschließlich bei einem erneuten Aufruf dieser
+			Seite wieder ausgelesen, um das Formular für Sie vorzubelegen.<br>
+			<br>
+			Vielen Dank für Ihr Verständnis!</p>
+			<form name="traceform" id="traceform" action="encrypt.php" method="post" onsubmit="beforeSubmit()">
+				<input type="hidden" id="token" name="token" value="">
+				<label>Vorname*:<br><input type="text" name="vorname" required></label>
+				<label>Nachname*: <br><input type="text" name="nachname" required></label>
+				<label>Straße &amp; Hausnummer*: <br><input type="text" name="anschrift" required></label>
+				<label>PLZ*: <br><input type="text" name="plz" required maxlength="5"></label>
+				<label>Ort*: <br><input type="text" name="ort" required></label>
+				<label>Telefon*: <br><input type="text" name="tel" required></label>
+				<label><input type="checkbox" name="save" id="save"> Meine Daten im Browser Speichern</label>
+				<input type="submit" value="Speichern">
+			</form>
+
+			<p>
+				<b>Weiterführende Links:</b><br>
+				<br>
+				<a href="https://universum-ev.de/kontakt.html">Kontakt</a><br>
+				<a href="https://universum-ev.de/impressum.html">Impressum</a><br>
+				<a href="https://universum-ev.de/datenschutz.html">Datenschutz</a>
+			</p>
+		</div>
+	</body>
+</html>
