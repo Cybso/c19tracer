@@ -43,7 +43,7 @@ foreach ($values as &$value) {
 
 
 // GPG-Verschlüsselung durchführen
-$cmd = "gpg -ae -r ".escapeshellarg($gpgId)." --homedir=".escapeshellarg($gpgKeyring);
+$cmd = "gpg --trust-model=always -ae -r ".escapeshellarg($gpgId)." --homedir=".escapeshellarg($gpgKeyring);
 $descriptorspec = array(
    0 => array("pipe", "r"),
    1 => array("pipe", "w"),

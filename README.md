@@ -5,13 +5,13 @@ Corona Kontakterfassung für Universum e.V.
 ## Hinweis
 
 Dies ist ein schnell gehacktes Tool als Alternative
-zur Luca-App für einen kleinen Verein.
+zu zentralen Contact-Tracing-Apps für einen kleinen Verein.
 
 Das Ziel war es, die Kontaktdaten der Besucher ohne die Notwendigkeit
 einer App-Installation digital erfassen zu können, wie es gemäß
-der aktuellen Version der Niedersächsischen Corona-Verordnung
+der aktuellen Version der niedersächsischen Corona-Verordnung
 vorgeschrieben ist. Der Aufruf der Seite kann per QR-Code erfolgen.
-Zur Verbesserung des Komforts können die Eingabedaten gespeichert
+Zur Verbesserung des Komforts können die Eingabedaten durch den Benutzer gespeichert
 werden, dies erfolgt jedoch ausschließlich im localStorage des Browser.
 
 Es werden nur die notwendigen Daten erfasst und tageweise mit einem
@@ -19,12 +19,12 @@ Zeitstempel versehen in eine CSV-Datei gespeichert, wobei zuvor
 jede Zeile separat per GnuPG asymetrisch verschlüsselt wird. Sofern
 der private Schlüssel ordnungsgemäß geheim gehalten wird, ist es
 also selbst für einen Angreifer mit Lese-Zugriff auf den Server
-nicht möglich, die Dateien auszulesen.
+nicht möglich, die Daten auszulesen.
 
 Für die Entschlüsselung der Daten steht ein kleines JavaScript-Tool
 zur Verfügung (decrypt.html), welches jedoch komplett lokal arbeitet.
 
-Wie bei der Luca-App ist es auch hier möglich, die Veranstaltung
+Wie bei anderen zentralen Kontakterfassungs-Apps ist es auch hier möglich, die Veranstaltung
 mit falschen Kontaktdaten zu fluten, dies ist bei zentralen
 Kontakterfassungstools ein grundsätzliches Problem. Um dieses
 Problem ein wenig zu mitigieren besteht die Option, jeder Veranstaltung
@@ -73,7 +73,7 @@ Vorgehen:
 
 ## Best practises
 
-Ich empfehle, für das Tool ein individuell erzeugtes Schlüsselpaar zu erzeugen und den 
+Ich empfehle, für das Tool ein individuelles Schlüsselpaar zu erzeugen und den 
 privaten Schlüssel sowie das dazu notwendige Passphrase an unterschiedliche Personen
 aushändigen, so dass immer mindestens zwei Personen erforderlich sind, um auf
 die Daten zugreifen zu können.
