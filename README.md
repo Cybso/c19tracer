@@ -82,3 +82,9 @@ die Daten zugreifen zu können.
 
 Das Entschlüsselungstool komfortabler machen. Das Projekt gehe ich an, sobald das Gesundheitsamt
 mehr als zwei mal angeklopft hat. Im besten Fall wird es sowieso nie gebraucht...
+
+# Lizenz
+
+Das Tool steht unter der GPL 3.0.
+
+Die Entschlüsselungskomponente verwendet das [OpenPGP.js-Framework](https://openpgpjs.org).
